@@ -5,6 +5,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const PORT = process.env.PORT || 3000;
+const cookieParser = require('cookie-parser');
 
 const corsOptions = {
     origin: "*",
@@ -13,6 +14,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xceqs5c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -27,8 +29,10 @@ const client = new MongoClient(uri, {
 });
 
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    // const authHeader = req.headers['authorization'];
+    // const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    const token = req.cookies['access_token'];
 
     if (!token) return res.status(401).json({ message: 'Access token required' });
 
@@ -69,7 +73,19 @@ async function run() {
             if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
             const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            res.json({ token });
+            // res.json({ token });
+            res.cookie('access_token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production', // true in production (HTTPS)
+                sameSite: 'Strict', // or 'Lax' for more compatibility
+                maxAge: 60 * 60 * 1000, // 1 hour
+            });
+            res.json({ message: 'Login successful' });
+        });
+
+        app.post('/logout', (req, res) => {
+            res.clearCookie('access_token');
+            res.json({ message: 'Logged out' });
         });
 
         // Protected route
