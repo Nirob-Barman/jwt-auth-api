@@ -6,8 +6,6 @@ A secure authentication API using **JWT tokens in HTTP headers** (via `Authoriza
 
 ## 🚀 Branch Options
 
-## 🚀 Branch Options
-
 This project supports two different authentication strategies:
 
 | Branch             | Description                          |
