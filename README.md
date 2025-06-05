@@ -1,14 +1,17 @@
+## 📁 `cookie-jwt-auth` → `README.md` (Cookie-based JWT)
+
 # JWT Auth API
 
-A secure authentication API built with **Node.js**, **Express**, **MongoDB**, **JWT**, and **bcrypt** for hashing passwords. It includes user registration, login, and a protected route that requires a valid JWT token.
+This version of the API uses **HTTP-only cookies** to store JWTs for secure authentication. Built with **Node.js**, **Express**, **MongoDB**, **JWT**, and **bcrypt**.
 
 ## Features
 
-- 🔐 User registration with password hashing
-- 🔐 User login with JWT token generation
-- 🔐 Protected route accessible only with valid token
-- 🌐 CORS enabled
-- 📦 MongoDB for data storage
+- Secure cookie-based JWT storage
+- User registration and login
+- Protected route with token authentication via cookies
+- Logout functionality (clears cookie)
+- CORS + credentials support
+- MongoDB Atlas integration
 
 ---
 
@@ -19,6 +22,7 @@ A secure authentication API built with **Node.js**, **Express**, **MongoDB**, **
 - MongoDB (with MongoDB Atlas)
 - JSON Web Tokens (JWT)
 - bcrypt.js
+- cookie-parser
 - dotenv
 
 ---
@@ -37,6 +41,7 @@ A secure authentication API built with **Node.js**, **Express**, **MongoDB**, **
 ```bash
 git clone https://github.com/Nirob-Barman/jwt-auth-api.git
 cd jwt-auth-api
+git checkout cookie-jwt-auth
 ```
 
 2. **Install dependencies:**
@@ -52,6 +57,7 @@ PORT=3000
 DB_USER=yourMongoUser
 DB_PASS=yourMongoPassword
 JWT_SECRET=yourJWTSecret
+NODE_ENV=development
 ```
 
 4. **Start the server:**
@@ -113,18 +119,14 @@ Logs in a user and returns a JWT.
 
 ```json
 {
-  "token": "yourJWTToken"
+  "message": "Login successful"
 }
 ```
 
 `GET /protected`
 
-Protected route. Requires a valid JWT in the header.
+Protected route. The JWT is automatically sent as an HTTP-only cookie. No need to manually include it in headers.
 
-`Headers:`
-```
-Authorization: Bearer yourJWTToken
-```
 **Response:**
 
 ```json
@@ -132,6 +134,27 @@ Authorization: Bearer yourJWTToken
   "message": "Hello username, this is protected data."
 }
 ```
+
+`POST /logout`
+
+Logs out a user by clearing the authentication cookie.
+
+**Response:**
+```json
+{
+  "message": "Logged out"
+}
+```
+
+---
+
+#### 🔐 **CORS and Cookies:**
+CORS is configured to support credentials, and cookies are used for token transport:
+
+> This version uses **HTTP-only cookies** for token storage. Make sure your frontend sends requests with `credentials: 'include'` when calling protected endpoints.
+
+---
+
 
 ## Project Structure
 ```
