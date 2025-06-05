@@ -1,6 +1,26 @@
 # JWT Auth API
 
-A secure authentication API built with **Node.js**, **Express**, **MongoDB**, **JWT**, and **bcrypt** for hashing passwords. It includes user registration, login, and a protected route that requires a valid JWT token.
+A secure authentication API using **JWT tokens in HTTP headers** (via `Authorization: Bearer <token>`). Built with **Node.js**, **Express**, **MongoDB**, **JWT**, and **bcrypt** for hashing passwords. It includes user registration, login, and a protected route that requires a valid JWT token.
+
+---
+
+## 🚀 Branch Options
+
+## 🚀 Branch Options
+
+This project supports two different authentication strategies:
+
+| Branch             | Description                          |
+|--------------------|--------------------------------------|
+| `main`             | Uses **Authorization header** for JWT |
+| `cookie-jwt-auth`  | Uses **HTTP-only cookies** for JWT   |
+
+> 👉 To switch to the cookie-based auth version:
+```bash
+git checkout cookie-jwt-auth
+```
+🔄 [View `cookie-jwt-auth` branch on GitHub](https://github.com/Nirob-Barman/jwt-auth-api/tree/cookie-jwt-auth)
+
 
 ## Features
 
